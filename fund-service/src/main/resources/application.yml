@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: fund-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:5001/eureka/
+feign:
+  client:
+    config:
+      default:
+        read-timeout: 6000
+        connect-timeout: 1000
+      user-service:
+        read-timeout: 5000
+        connect-timeout: 1000
+  #feign降级需要配合熔断器使用才会生效
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    UserFacade#getAllUsers(Long):
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1500
+logging:
+  level:
+    root: debug
+---
+server:
+  port: 7001
+spring:
+  profiles: s7001
+
+
+---
+server:
+  port: 7002
+spring:
+  profiles: s7002

@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: product-service
+
+logging:
+  level:
+    root: debug
+
+server:
+  port: 8001
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:5001/eureka/
+
+
+#ribbon配置
+#ribbon不配置http.client.enabled，
+#则ConnectTimeout和ReadTimeout不会生效
+ribbon:
+  http:
+    client:
+      enabled: true
+  ConnectTimeout: 1500
+  ReadTimeout: 5000
+#ribbon的超时时间一定要比hystrix的超时要大
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    sleep:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+  threadpool:
+    pool-user-1:
+      coreSize: 20
+      maximumSize: 20
+      maxQueueSize: 200
+      keepAliveTimeMinutes: 1
+      queueSizeRejectionThreshold: 200
+      allowMaximumSizeToDivergeFromCoreSize: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        exclude: env
